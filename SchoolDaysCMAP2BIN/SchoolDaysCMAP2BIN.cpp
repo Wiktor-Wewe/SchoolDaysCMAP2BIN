@@ -22,7 +22,7 @@ element* getElementWithIdOrMakeNew(int id, int position, int x, std::vector<elem
     element* newElement = new element;
     newElement->id = id;
     newElement->x = (position - 1) % x;
-    newElement->y = (position - 1) / x;
+    newElement->y = ((position - 1) / x) - 75; // -75 because CMAP is for 800x600 but real PNG file is 800x450 -> (600-450)/2 = 75 :P
     newElement->w = 0;
     newElement->h = 0;
     list.push_back(newElement);

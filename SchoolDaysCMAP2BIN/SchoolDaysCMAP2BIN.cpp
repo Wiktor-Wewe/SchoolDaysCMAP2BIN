@@ -42,7 +42,7 @@ void updateInfo(int position, int x, int y, element* e)
 void makeBinFile(std::string name, std::vector<element*>& list, int x, int y) 
 {
     std::fstream fileOUT;
-    fileOUT.open(name + ".bin", std::ios::out | std::ios::binary);
+    fileOUT.open(name + ".rrm", std::ios::out | std::ios::binary);
 
     if (!fileOUT.good()) {
         printf("unable to make bin file!\n");
@@ -50,8 +50,9 @@ void makeBinFile(std::string name, std::vector<element*>& list, int x, int y)
     }
 
 
-    uint32_t buff32; uint16_t buff16;
-    fileOUT << "CMAPbin ";
+    uint32_t buff32;
+    char signature[] = "rrmf";
+    fileOUT.write(reinterpret_cast<const char*>(&signature[0]), 4);
 
     buff32 = x;
     fileOUT.write(reinterpret_cast<const char*>(&buff32), sizeof(buff32));
@@ -63,8 +64,8 @@ void makeBinFile(std::string name, std::vector<element*>& list, int x, int y)
     fileOUT.write(reinterpret_cast<const char*>(&buff32), sizeof(buff32));
 
     for (int i = 0; i < list.size(); i++) {
-        buff16 = list[i]->id;
-        fileOUT.write(reinterpret_cast<const char*>(&buff16), sizeof(buff16));
+        buff32 = list[i]->id;
+        fileOUT.write(reinterpret_cast<const char*>(&buff32), sizeof(buff32));
         buff32 = list[i]->x;
         fileOUT.write(reinterpret_cast<const char*>(&buff32), sizeof(buff32));
         buff32 = list[i]->y;
@@ -83,7 +84,7 @@ int main(int argc, char* argv[])
 {
     if (argc < 2) {
         printf("usage: SchoolDaysCMAP2BIN [YOUR CMAP FILE].CMAP -> show info\n");
-        printf("usage: SchoolDaysCMAP2BIN [YOUR CMAP FILE].CMAP -b -> make binnary file\n\n");
+        printf("usage: SchoolDaysCMAP2BIN [YOUR CMAP FILE].CMAP -b -> make binnary (rrmf) file\n\n");
         return 1;
     }
 
